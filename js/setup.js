@@ -8,19 +8,15 @@ const eventTitleInput = document.getElementById('event-title');
 const speakerCountSelect = document.getElementById('speaker-count');
 const speakerNamesContainer = document.getElementById('speaker-names-container');
 const defaultTimeInput = document.getElementById('default-time');
-const setupInfoText = document.getElementById('setup-info-text');
-const timerModeInputs = document.querySelectorAll('input[name="timer-mode"]');
 
 speakerCountSelect.addEventListener('change', updateSpeakerInputs);
 eventTitleInput.addEventListener('input', () => {
   document.getElementById('header-title').textContent =
     eventTitleInput.value.trim() || 'Veranstaltungstitel';
 });
-setupInfoText.addEventListener('input', saveInfoText);
 document.getElementById('generate-timers').addEventListener('click', generateTimers);
 
 updateSpeakerInputs();
-loadInfoText();
 
 function updateSpeakerInputs() {
   const previousNames = Array.from(
@@ -69,11 +65,14 @@ function generateTimers() {
     eventTitleInput.value.trim() || 'Veranstaltungstitel';
 
   const timerGrid = document.getElementById('timer-grid');
+  const timerControls = document.getElementById('timer-controls');
   timerGrid.replaceChildren();
+  timerControls.replaceChildren();
 
   speakers.forEach((speaker) => {
     const block = document.createElement('section');
     block.className = 'timer-block';
+    block.id = `timer-block-${speaker.id}`;
 
     const name = document.createElement('div');
     name.className = 'speaker-name';
@@ -85,41 +84,54 @@ function generateTimers() {
     timer.textContent = formatTime(speaker.time);
     timer.setAttribute('aria-live', 'off');
 
-    const toggleButton = document.createElement('button');
-    toggleButton.type = 'button';
-    toggleButton.className = 'btn-timer';
-    toggleButton.textContent = 'Start';
-    toggleButton.setAttribute('aria-pressed', 'false');
-    toggleButton.addEventListener('click', () => toggleTimer(speaker.id));
+    const status = document.createElement('p');
+    status.className = 'timer-state';
+    status.id = `timer-state-${speaker.id}`;
+    status.textContent = 'Bereit';
 
-    block.append(name, timer, toggleButton);
-
-    if (timerMode === 'test') {
-      const controls = document.createElement('div');
-      controls.className = 'test-controls';
-      controls.setAttribute('aria-label', 'Testfunktionen');
-
-      const addButton = createControlButton('+1 Min', () => adjustTime(speaker.id, 60));
-      const subtractButton = createControlButton('-1 Min', () => adjustTime(speaker.id, -60));
-      const resetButton = createControlButton('Reset', () => resetTimer(speaker.id));
-
-      controls.append(addButton, subtractButton, resetButton);
-      block.appendChild(controls);
-    }
+    block.append(name, timer, status);
 
     timerGrid.appendChild(block);
+    timerControls.appendChild(createTimerControls(speaker, timerMode));
   });
-
-  document.getElementById('info-text-display').textContent =
-    setupInfoText.value.trim() || 'Zusätzliche Veranstaltungsinformationen';
-
-  syncLogoToTimer();
-  applyInfoBlockState();
 
   setupScreen.hidden = true;
   timerScreen.hidden = false;
   initTimers();
   window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function createTimerControls(speaker, timerMode) {
+  const controls = document.createElement('section');
+  controls.className = 'timer-control-row';
+  controls.setAttribute('aria-label', `Steuerung für ${speaker.name}`);
+
+  const name = document.createElement('h3');
+  name.className = 'control-speaker-name';
+  name.textContent = speaker.name;
+
+  const actions = document.createElement('div');
+  actions.className = 'control-actions';
+
+  const toggleButton = createControlButton(`${speaker.name} starten`, () => toggleTimer(speaker.id));
+  toggleButton.id = `timer-control-${speaker.id}`;
+  toggleButton.classList.add('btn-timer');
+  toggleButton.setAttribute('aria-pressed', 'false');
+  actions.appendChild(toggleButton);
+
+  if (timerMode === 'test') {
+    const testActions = document.createElement('div');
+    testActions.className = 'test-controls';
+    testActions.append(
+      createControlButton('-1 Min', () => adjustTime(speaker.id, -60)),
+      createControlButton('+1 Min', () => adjustTime(speaker.id, 60)),
+      createControlButton('Reset', () => resetTimer(speaker.id))
+    );
+    actions.appendChild(testActions);
+  }
+
+  controls.append(name, actions);
+  return controls;
 }
 
 function createControlButton(label, handler) {
@@ -135,15 +147,4 @@ function formatTime(seconds) {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   return `${String(minutes).padStart(2, '0')} : ${String(remainingSeconds).padStart(2, '0')}`;
-}
-
-function loadInfoText() {
-  const savedInfo = getStoredValue('infoBlockContent');
-  if (savedInfo !== null) {
-    setupInfoText.value = savedInfo;
-  }
-}
-
-function saveInfoText() {
-  setStoredValue('infoBlockContent', setupInfoText.value);
 }

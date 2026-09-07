@@ -27,8 +27,13 @@ function initTimers() {
       remainingMs: initialMs,
       endTime: null,
       running: false,
+      hasStarted: false,
+      name: speaker.name,
       lastDisplayText: null,
-      lastDisplayState: null
+      lastDisplayState: null,
+      lastStatus: null,
+      lastBlockState: null,
+      lastButtonRunning: null
     };
 
     updateTimerDisplay(speaker.id, true);
@@ -57,7 +62,6 @@ function stopAllTimers() {
     timer.endTime = null;
     timer.running = false;
 
-    updateTimerButton(id, false);
     updateTimerDisplay(id, true);
   });
 
@@ -80,9 +84,9 @@ function updateTimerDisplay(id, force = false) {
     console.error(`Timer ${id} has an invalid remaining time and was stopped.`);
     stopTimerSafely(timer);
     timer.remainingMs = Number.isFinite(timer.initialMs) ? timer.initialMs : 0;
-    updateTimerButton(id, false);
-    updateStopAllButton();
+    timer.hasStarted = false;
     updateTimerDisplay(id, true);
+    updateStopAllButton();
     return;
   }
 
@@ -93,7 +97,8 @@ function updateTimerDisplay(id, force = false) {
   const formattedTime = `${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`;
   const displayText = displaySeconds < 0 ? `− ${formattedTime}` : formattedTime;
   const displayState = getDisplayState(timer.remainingMs);
-  const previousDisplayState = timer.lastDisplayState;
+  const status = getTimerStatus(timer, displayState);
+  const previousStatus = timer.lastStatus;
 
   if (force || displayText !== timer.lastDisplayText) {
     timerElement.textContent = displayText;
@@ -105,24 +110,77 @@ function updateTimerDisplay(id, force = false) {
     timer.lastDisplayState = displayState;
   }
 
-  if (previousDisplayState !== null && displayState !== previousDisplayState) {
-    announceTimerState(id, displayState);
+  updateTimerBlock(id, timer, displayState);
+  updateTimerButton(id, timer.running);
+  updateTimerStatus(id, status, previousStatus);
+
+  if (previousStatus !== null && status !== previousStatus) {
+    announceTimerState(timer.name || `Timer ${id}`, status);
   }
+
+  timer.lastStatus = status;
 }
 
-function announceTimerState(id, displayState) {
+function getTimerStatus(timer, displayState) {
+  if (displayState === 'overtime') {
+    return 'overtime';
+  }
+
+  if (displayState === 'warning' && timer.hasStarted) {
+    return 'warning';
+  }
+
+  if (timer.running) {
+    return 'running';
+  }
+
+  return timer.hasStarted ? 'paused' : 'ready';
+}
+
+function updateTimerBlock(id, timer, displayState) {
+  const block = document.getElementById(`timer-block-${id}`);
+  const blockState = `${displayState}-${timer.running}`;
+  if (!block || timer.lastBlockState === blockState) {
+    return;
+  }
+
+  block.classList.toggle('running', timer.running && displayState === 'normal');
+  block.classList.toggle('warning', displayState === 'warning');
+  block.classList.toggle('overtime', displayState === 'overtime');
+  timer.lastBlockState = blockState;
+}
+
+function updateTimerStatus(id, status, previousStatus) {
+  const statusElement = document.getElementById(`timer-state-${id}`);
+  if (!statusElement || previousStatus === status) {
+    return;
+  }
+
+  const labels = {
+    ready: 'Bereit',
+    running: 'Läuft',
+    paused: 'Pausiert',
+    warning: 'Letzte Minute',
+    overtime: 'Zeit überschritten'
+  };
+  statusElement.textContent = labels[status];
+}
+
+function announceTimerState(name, status) {
   const statusElement = document.getElementById('timer-status');
   if (!statusElement) {
     return;
   }
 
   const stateLabels = {
-    normal: 'läuft wieder im normalen Zeitbereich',
+    ready: 'ist bereit',
+    running: 'läuft',
+    paused: 'ist pausiert',
     warning: 'ist in der letzten Minute',
-    overtime: 'ist in der Überzeit'
+    overtime: 'hat die Zeit überschritten'
   };
 
-  statusElement.textContent = `Timer ${id} ${stateLabels[displayState]}.`;
+  statusElement.textContent = `${name} ${stateLabels[status]}.`;
 }
 
 function getDisplayState(remainingMs) {
@@ -182,7 +240,7 @@ function startTimer(id, timer) {
 
   timer.endTime = performance.now() + timer.remainingMs;
   timer.running = true;
-  updateTimerButton(id, true);
+  timer.hasStarted = true;
 
   timer.interval = setInterval(() => {
     if (!timer.running || !Number.isFinite(timer.endTime)) {
@@ -208,7 +266,6 @@ function pauseTimer(id, timer) {
   }
 
   stopTimerSafely(timer);
-  updateTimerButton(id, false);
   updateTimerDisplay(id, true);
   updateStopAllButton();
 }
@@ -250,30 +307,34 @@ function resetTimer(id) {
 
   stopTimerSafely(timer);
   timer.remainingMs = timer.initialMs;
-  updateTimerButton(id, false);
+  timer.hasStarted = false;
   updateTimerDisplay(id, true);
   updateStopAllButton();
 }
 
 function updateTimerButton(id, running) {
   const button = getTimerButton(id);
+  const timer = timers[id];
 
   if (!button) {
     return;
   }
 
-  const label = running ? 'Stop' : 'Start';
+  const name = timer?.name || `Timer ${id}`;
+  const label = `${name} ${running ? 'stoppen' : 'starten'}`;
   if (button.textContent !== label) {
     button.textContent = label;
   }
 
-  button.classList.toggle('running', running);
-  button.setAttribute('aria-pressed', String(running));
+  if (timer?.lastButtonRunning !== running) {
+    button.classList.toggle('running', running);
+    button.setAttribute('aria-pressed', String(running));
+    timer.lastButtonRunning = running;
+  }
 }
 
 function getTimerButton(id) {
-  const timerElement = document.getElementById(`timer${id}`);
-  return timerElement?.closest('.timer-block')?.querySelector('.btn-timer') || null;
+  return document.getElementById(`timer-control-${id}`);
 }
 
 function hasRunningTimers() {

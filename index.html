@@ -54,34 +54,6 @@
 
     <div id="speaker-names-container" class="speaker-names"></div>
 
-    <section class="form-group info-setup" aria-labelledby="info-title">
-      <div class="info-header">
-        <h2 id="info-title" class="info-title">Veranstaltungsinformationen</h2>
-        <button id="info-toggle" class="btn-info-toggle" type="button" aria-expanded="true">
-          Ausblenden
-        </button>
-      </div>
-
-      <div id="setup-info-body">
-        <div class="logo-upload-section">
-          <label for="logo-upload" class="logo-upload-label">Logo auswählen</label>
-          <input class="visually-hidden" type="file" id="logo-upload" accept="image/png,image/jpeg">
-
-          <div id="logo-preview-container" class="logo-preview-container">
-            <img id="setup-info-logo" src="assets/logo_infoblock.png" alt="Veranstaltungslogo" class="info-logo">
-          </div>
-
-          <button id="setup-logo-remove-btn" class="btn-logo-remove" type="button">
-            Logo entfernen
-          </button>
-        </div>
-
-        <label class="form-label" for="setup-info-text">Info-Text</label>
-        <textarea id="setup-info-text" class="info-text-area" rows="3" placeholder="Zusätzliche Veranstaltungsinformationen">3. Hofgespräch 2026
-19.09.2026 - Dahlem</textarea>
-      </div>
-    </section>
-
     <button id="generate-timers" class="btn btn-primary" type="button">Timer generieren</button>
   </main>
 
@@ -100,25 +72,19 @@
     </header>
 
     <div id="timer-grid" class="timer-grid"></div>
-  <p id="timer-status" class="visually-hidden" aria-live="polite"></p>
+    <p id="timer-status" class="visually-hidden" aria-live="polite"></p>
 
-    <section id="info-block" class="info-block" aria-label="Veranstaltungsinformationen">
-      <div class="info-content">
-        <div id="timer-logo-container" class="logo-preview-container">
-          <img id="info-logo" src="assets/logo_infoblock.png" alt="Veranstaltungslogo" class="info-logo">
-        </div>
-        <div id="info-text-display" class="info-text"></div>
+    <section id="control-panel" class="control-panel" aria-labelledby="control-panel-title">
+      <h2 id="control-panel-title">Steuerung</h2>
+      <div id="timer-controls" class="timer-controls"></div>
+      <div class="stop-all-container">
+        <button id="stop-all-timers" class="stop-all-btn" type="button" disabled>Alle stoppen</button>
       </div>
     </section>
-
-    <div class="stop-all-container">
-      <button id="stop-all-timers" class="stop-all-btn" type="button" disabled>Alle stoppen</button>
-    </div>
 
     <button id="back-to-setup" class="back-btn" type="button">← Zurück zum Setup</button>
   </main>
 
-  <script src="js/storage.js"></script>
   <script src="js/setup.js"></script>
   <script src="js/timer.js"></script>
   <script src="js/app.js"></script>
