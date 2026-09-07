@@ -4,6 +4,9 @@ A lightweight, browser-based timer for tracking the speaking time of multiple sp
 
 The application runs locally in a modern browser and does not require a framework, build process, database, or internet connection.
 
+<img width="1880" height="1145" alt="image" src="https://github.com/user-attachments/assets/ff51d0bb-04b9-4b77-8b18-fdb182f8421e" />
+
+
 ## Features
 
 ### Setup
