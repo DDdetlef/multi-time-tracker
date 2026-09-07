@@ -89,6 +89,7 @@ function generateTimers() {
     toggleButton.type = 'button';
     toggleButton.className = 'btn-timer';
     toggleButton.textContent = 'Start';
+    toggleButton.setAttribute('aria-pressed', 'false');
     toggleButton.addEventListener('click', () => toggleTimer(speaker.id));
 
     block.append(name, timer, toggleButton);
@@ -137,12 +138,12 @@ function formatTime(seconds) {
 }
 
 function loadInfoText() {
-  const savedInfo = localStorage.getItem('infoBlockContent');
+  const savedInfo = getStoredValue('infoBlockContent');
   if (savedInfo !== null) {
     setupInfoText.value = savedInfo;
   }
 }
 
 function saveInfoText() {
-  localStorage.setItem('infoBlockContent', setupInfoText.value);
+  setStoredValue('infoBlockContent', setupInfoText.value);
 }

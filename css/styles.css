@@ -396,6 +396,34 @@ textarea:focus-visible {
   border-radius: 12px;
 }
 
+.stop-all-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.stop-all-btn {
+  padding: 8px 14px;
+  color: #ddd;
+  background: #1b1b1b;
+  border: 1px solid #555;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+}
+
+.stop-all-btn:hover:not(:disabled) {
+  color: #fff;
+  background: #333;
+  border-color: #777;
+}
+
+.stop-all-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .info-content {
   display: flex;
   flex-direction: column;

@@ -23,13 +23,13 @@ restoreLogo();
 applyInfoBlockState();
 
 function toggleInfoBlock() {
-  const currentlyHidden = localStorage.getItem(INFO_HIDDEN_KEY) === 'true';
-  localStorage.setItem(INFO_HIDDEN_KEY, String(!currentlyHidden));
+  const currentlyHidden = getStoredValue(INFO_HIDDEN_KEY) === 'true';
+  setStoredValue(INFO_HIDDEN_KEY, String(!currentlyHidden));
   applyInfoBlockState();
 }
 
 function applyInfoBlockState() {
-  const isHidden = localStorage.getItem(INFO_HIDDEN_KEY) === 'true';
+  const isHidden = getStoredValue(INFO_HIDDEN_KEY) === 'true';
 
   setupInfoBody.classList.toggle('hidden', isHidden);
   timerInfoBlock.classList.toggle('hidden', isHidden);
@@ -57,30 +57,27 @@ function handleLogoUpload(event) {
   reader.addEventListener('load', () => {
     const logoUrl = String(reader.result);
 
-    try {
-      localStorage.setItem(LOGO_URL_KEY, logoUrl);
-      localStorage.removeItem(LOGO_REMOVED_KEY);
-    } catch (error) {
-      window.alert('Das Logo konnte nicht gespeichert werden. Bitte eine kleinere Datei verwenden.');
-      logoInput.value = '';
-      return;
-    }
-
+    const logoSaved = setStoredValue(LOGO_URL_KEY, logoUrl);
+    const removalFlagCleared = removeStoredValue(LOGO_REMOVED_KEY);
     showLogo(logoUrl);
+
+    if (!logoSaved || !removalFlagCleared) {
+      window.alert('Das Logo wird nur bis zum Neuladen angezeigt, weil der Browser-Speicher nicht verfügbar ist.');
+    }
   });
   reader.readAsDataURL(file);
 }
 
 function removeLogo() {
-  localStorage.removeItem(LOGO_URL_KEY);
-  localStorage.setItem(LOGO_REMOVED_KEY, 'true');
+  removeStoredValue(LOGO_URL_KEY);
+  setStoredValue(LOGO_REMOVED_KEY, 'true');
   logoInput.value = '';
   hideLogo();
 }
 
 function restoreLogo() {
-  const removed = localStorage.getItem(LOGO_REMOVED_KEY) === 'true';
-  const savedLogoUrl = localStorage.getItem(LOGO_URL_KEY);
+  const removed = getStoredValue(LOGO_REMOVED_KEY) === 'true';
+  const savedLogoUrl = getStoredValue(LOGO_URL_KEY);
 
   if (removed) {
     hideLogo();
@@ -111,13 +108,13 @@ function hideLogo() {
 }
 
 function syncLogoToTimer() {
-  const removed = localStorage.getItem(LOGO_REMOVED_KEY) === 'true';
+  const removed = getStoredValue(LOGO_REMOVED_KEY) === 'true';
   if (removed) {
     hideLogo();
     return;
   }
 
-  showLogo(localStorage.getItem(LOGO_URL_KEY) || DEFAULT_INFO_LOGO);
+  showLogo(getStoredValue(LOGO_URL_KEY) || DEFAULT_INFO_LOGO);
 }
 
 function goBackToSetup() {

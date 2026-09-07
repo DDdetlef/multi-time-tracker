@@ -61,6 +61,7 @@ The event information section is configured only on the Setup screen.
 - Uploaded logos are limited to 1 MB.
 
 The settings are stored in the browser using `localStorage`. They remain available after reloading the page in the same browser, unless the browser storage is cleared.
+If browser storage is unavailable, the application remains usable, but information and logo changes are retained only until the page is reloaded.
 
 ## Requirements
 
@@ -93,6 +94,14 @@ multi-time-tracker/
 4. Open `index.html` in a modern browser.
 
 No package installation is required.
+
+## Automated tests
+
+If Node.js is available, run the automated timer boundary and browser-storage fallback tests with:
+
+```bash
+npm test
+```
 
 ## Usage
 
