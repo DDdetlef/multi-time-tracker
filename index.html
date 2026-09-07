@@ -29,24 +29,39 @@
     </div>
 
     <div class="form-group">
-      <label class="form-label">Zeitkonfiguration</label>
-      <div class="time-options">
-        <div class="time-option selected" onclick="selectTimeOption('all')">
-          Alle gleich
-        </div>
-        <div class="time-option" onclick="selectTimeOption('individual')">
-          Individuell
-        </div>
-      </div>
+      <label class="form-label" for="default-time">Redezeit pro Sprecher (Minuten)</label>
+      <input type="number" id="default-time" class="form-input" value="15" min="1" max="120">
     </div>
 
     <div id="speaker-names-container" class="speaker-names">
       <!-- Dynamisch generierte Eingabefelder -->
     </div>
 
+    <!-- Info-Block im Setup (ohne Logo beim ersten Start) -->
     <div class="form-group">
-      <label class="form-label" id="time-label" for="default-time">Standardzeit pro Sprecher (Minuten)</label>
-      <input type="number" id="default-time" class="form-input" value="15" min="1" max="120">
+      <div class="info-header">
+        <h3 class="info-title">Veranstaltungsinformationen</h3>
+        <div class="info-controls">
+          <button class="btn-info-toggle" onclick="toggleInfoBlock()" title="Anzeigen/Ausblenden">👁️</button>
+        </div>
+      </div>
+      
+      <!-- Logo-Auswahl und -Entfernung AUSSERHALB des editierbaren Bereichs -->
+      <div class="logo-upload-section">
+        <label for="logo-upload" class="logo-upload-label">
+          📂 Logo auswählen
+          <input type="file" id="logo-upload" accept="image/png,image/jpeg" style="display: none;" onchange="handleLogoUpload(this)">
+        </label>
+        <div id="logo-preview-container" class="logo-preview-container">
+          <!-- Kein Standardlogo beim ersten Start -->
+          <img id="setup-info-logo" src="" alt="Domäne Dahlem Info Logo" class="info-logo hidden">
+        </div>
+        <button class="btn-logo-remove" onclick="removeLogo()" title="Logo entfernen" id="setup-logo-remove-btn" style="display: none;">🗑️ Logo entfernen</button>
+      </div>
+      
+      <!-- Einfaches Textfeld mit reinem Text (kein HTML) -->
+      <textarea id="setup-info-text" class="info-text-area" rows="3" placeholder="Zusätzliche Veranstaltungsinformationen">3. Hofgespräch 2026
+19.09.2026 - Dahlem</textarea>
     </div>
 
     <button class="btn btn-primary" onclick="generateTimers()">Timer Generieren</button>
@@ -73,15 +88,19 @@
       <!-- Dynamisch generierte Timer-Blöcke -->
     </div>
 
-    <div class="block info-block">
-      <img id="info-logo" src="assets/logo_infoblock.png" alt="Domäne Dahlem Info Logo" class="info-logo">
-      <div class="info-text">
-        <strong>Hofgespräch im Landgasthaus</strong><br>
-        09.09.2026
+    <!-- ✅ Timer-Info-Block mit ID info-content -->
+    <div id="info-block" class="block info-block">
+      <div class="info-content">
+        <div class="logo-preview-container">
+          <img id="info-logo" src="" alt="Domäne Dahlem Info Logo" class="info-logo hidden">
+        </div>
+        <div id="info-text-display" class="info-text">
+          <!-- Wird per JS gefüllt -->
+        </div>
       </div>
     </div>
 
-    <button class="back-btn" onclick="goBackToSetup()">← Setup zurücksetzen</button>
+    <button class="back-btn" onclick="goBackToSetup()">← Zurück zum Setup</button>
   </div>
 
   <script src="js/setup.js"></script>

@@ -58,7 +58,7 @@ function updateTimerDisplay(id) {
 
 function toggleTimer(id) {
   const timer = timers[id];
-  const button = document.querySelector(`#timer${id}`).closest('.timer-block').querySelector('.btn');
+  const button = document.querySelector(`#timer${id}`).closest('.timer-block').querySelector('.btn-timer');
 
   if (timer.running) {
     clearInterval(timer.interval);
@@ -89,15 +89,10 @@ function resetTimer(id) {
   if (timer.running) {
     clearInterval(timer.interval);
     timer.running = false;
-    const button = document.querySelector(`#timer${id}`).closest('.timer-block').querySelector('.btn');
+    const button = document.querySelector(`#timer${id}`).closest('.timer-block').querySelector('.btn-timer');
     button.textContent = 'Start';
     button.classList.remove('running');
   }
   timer.time = speakers.find(s => s.id === id).time;
   updateTimerDisplay(id);
-}
-
-function goBackToSetup() {
-  timerScreen.style.display = 'none';
-  setupScreen.style.display = 'block';
 }
