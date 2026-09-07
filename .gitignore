@@ -1,0 +1,22 @@
+# Betriebssystem
+.DS_Store
+Thumbs.db
+
+# directories
+/archiv/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node Modules
+node_modules/
+
+# Environment Variables
+.env
