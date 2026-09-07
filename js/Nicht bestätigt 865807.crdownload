@@ -9,7 +9,6 @@ const speakerCountSelect = document.getElementById('speaker-count');
 const speakerNamesContainer = document.getElementById('speaker-names-container');
 const defaultTimeInput = document.getElementById('default-time');
 const setupInfoText = document.getElementById('setup-info-text');
-const timerModeInputs = document.querySelectorAll('input[name="timer-mode"]');
 
 speakerCountSelect.addEventListener('change', updateSpeakerInputs);
 eventTitleInput.addEventListener('input', () => {
@@ -45,7 +44,6 @@ function updateSpeakerInputs() {
 function generateTimers() {
   const count = Number.parseInt(speakerCountSelect.value, 10);
   const minutes = Number.parseInt(defaultTimeInput.value, 10);
-  const timerMode = document.querySelector('input[name="timer-mode"]:checked')?.value || 'live';
 
   if (!Number.isInteger(minutes) || minutes < 1 || minutes > 120) {
     defaultTimeInput.focus();
@@ -91,21 +89,15 @@ function generateTimers() {
     toggleButton.textContent = 'Start';
     toggleButton.addEventListener('click', () => toggleTimer(speaker.id));
 
-    block.append(name, timer, toggleButton);
+    const controls = document.createElement('div');
+    controls.className = 'test-controls';
 
-    if (timerMode === 'test') {
-      const controls = document.createElement('div');
-      controls.className = 'test-controls';
-      controls.setAttribute('aria-label', 'Testfunktionen');
+    const addButton = createControlButton('+1 Min', () => adjustTime(speaker.id, 60));
+    const subtractButton = createControlButton('-1 Min', () => adjustTime(speaker.id, -60));
+    const resetButton = createControlButton('Reset', () => resetTimer(speaker.id));
 
-      const addButton = createControlButton('+1 Min', () => adjustTime(speaker.id, 60));
-      const subtractButton = createControlButton('-1 Min', () => adjustTime(speaker.id, -60));
-      const resetButton = createControlButton('Reset', () => resetTimer(speaker.id));
-
-      controls.append(addButton, subtractButton, resetButton);
-      block.appendChild(controls);
-    }
-
+    controls.append(addButton, subtractButton, resetButton);
+    block.append(name, timer, toggleButton, controls);
     timerGrid.appendChild(block);
   });
 

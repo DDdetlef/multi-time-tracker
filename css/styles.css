@@ -1,39 +1,87 @@
-/* css/styles.css */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* WICHTIG: Scrollen ermöglichen */
+:root {
+  color-scheme: dark;
+  --background: #000;
+  --surface: #111;
+  --surface-light: #222;
+  --border: #555;
+  --text: #fff;
+  --muted: #aaa;
+  --primary: #007bff;
+  --primary-hover: #0056b3;
+  --warning: #faec04;
+  --overtime: #bb3f17;
+}
+
 body {
-  background-color: #000;
-  color: #fff;
-  font-family: 'Segoe UI', 'Arial', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Flex-start statt center */
   min-height: 100vh;
   padding: 20px;
   overflow-x: hidden;
-  overflow-y: auto; /* Scrollen erlauben */
+  overflow-y: auto;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* Setup Screen Styles */
-.setup-container {
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #7cb8ff;
+  outline-offset: 2px;
+}
+
+[hidden],
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.setup-container,
+.timer-container {
   width: 100%;
+  margin: 0 auto;
+}
+
+.setup-container {
   max-width: 600px;
-  background-color: #111;
-  border-radius: 16px;
   padding: 30px;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgb(255 255 255 / 10%);
+}
+
+.timer-container {
+  max-width: 1800px;
 }
 
 .setup-title {
-  font-size: 28px;
   margin-bottom: 25px;
   text-align: center;
-  color: #fff;
+  font-size: 28px;
 }
 
 .form-group {
@@ -43,122 +91,194 @@ body {
 .form-label {
   display: block;
   margin-bottom: 8px;
+  color: var(--muted);
   font-weight: 600;
-  color: #aaa;
 }
 
-.form-input {
+.form-input,
+.form-select,
+.speaker-name-input,
+.info-text-area {
   width: 100%;
   padding: 12px;
-  background-color: #222;
+  color: var(--text);
+  background: var(--surface-light);
   border: 1px solid #444;
   border-radius: 8px;
-  color: #fff;
   font-size: 16px;
 }
 
-.form-input:focus {
-  outline: none;
-  border-color: #666;
+.speaker-name-input {
+  margin-bottom: 10px;
 }
 
-.form-select {
-  width: 100%;
-  padding: 12px;
-  background-color: #222;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 16px;
-}
-
-.form-select:focus {
-  outline: none;
-  border-color: #666;
-}
-
-/* Getrennte Button-Klassen */
-.btn {
-  width: 100%;
-  padding: 14px;
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #555;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-}
-
-.btn:hover {
-  background-color: #444;
-  border-color: #777;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border-color: #0056b3;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
+.info-text-area {
+  min-height: 80px;
+  resize: vertical;
 }
 
 .speaker-names {
   margin-top: 20px;
 }
 
-.speaker-name-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #222;
+.mode-fieldset {
+  border: 0;
+}
+
+.mode-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mode-option {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px;
+  background: var(--surface-light);
   border: 1px solid #444;
   border-radius: 8px;
-  color: #fff;
-  font-size: 16px;
+  cursor: pointer;
 }
 
-.speaker-name-input:focus {
-  outline: none;
-  border-color: #666;
+.mode-option:has(input:checked) {
+  border-color: #7cb8ff;
+  box-shadow: 0 0 0 1px #7cb8ff;
 }
 
-/* Timer Screen Styles */
-.timer-container {
-  display: none;
+.mode-option input {
+  margin-top: 3px;
+}
+
+.mode-option span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mode-option small {
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.btn,
+.back-btn,
+.btn-info-toggle,
+.btn-logo-remove,
+.btn-timer,
+.btn-test,
+.logo-upload-label {
+  color: var(--text);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+}
+
+.btn {
   width: 100%;
-  max-width: 1800px;
+  margin-top: 10px;
+  padding: 14px;
+  background: #333;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-/* Header mit Logos links und rechts, Titel mittig */
+.btn-primary,
+.logo-upload-label {
+  background: var(--primary);
+  border-color: var(--primary-hover);
+}
+
+.btn-primary:hover,
+.logo-upload-label:hover {
+  background: var(--primary-hover);
+}
+
+.info-header {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.info-title {
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.btn-info-toggle,
+.btn-logo-remove {
+  padding: 8px 12px;
+  background: var(--surface-light);
+  border-radius: 6px;
+}
+
+.btn-info-toggle:hover,
+.btn-logo-remove:hover,
+.back-btn:hover {
+  background: #333;
+  border-color: #777;
+}
+
+.logo-upload-section {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.logo-upload-label {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.logo-preview-container {
+  display: flex;
+  min-height: 120px;
+  margin-top: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-logo {
+  display: block;
+  width: 150px;
+  height: auto;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+.btn-logo-remove {
+  margin-top: 10px;
+}
+
 .header {
   display: flex;
+  gap: 20px;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
   padding: 15px;
-  background-color: #111;
+  background: var(--surface);
+  border: 1px solid rgb(255 255 255 / 30%);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  gap: 20px;
 }
 
 .header-logo-left,
 .header-logo-right {
-  flex: 0 0 auto;
   display: flex;
-  justify-content: center;
+  flex: 0 0 auto;
   align-items: center;
+  justify-content: center;
 }
 
 .header-logo {
   width: 80px;
   height: auto;
   object-fit: contain;
-  max-width: 100%;
 }
 
 .header-content {
@@ -167,275 +287,171 @@ body {
 }
 
 .header h1 {
-  font-size: 32px;
-  color: #fff;
   margin-bottom: 10px;
+  font-size: 32px;
 }
 
-.header .subtitle {
+.subtitle {
+  color: var(--muted);
   font-size: 18px;
-  color: #aaa;
 }
 
-/* WICHTIG: Maximal 2 Spalten erzwingen */
 .timer-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 15px;
 }
 
-/* Verbesserte Timer-Boxen mit sichtbaren weißen Linien */
 .timer-block {
-  background-color: #0a0a0a;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 20px;
+  background: #0a0a0a;
   border: 2px solid #fff;
   border-radius: 16px;
-  padding: 25px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-  position: relative;
 }
 
-.timer-block:hover {
-  border-color: #ccc;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-}
-
-/* Sprecher-Namen: Größer und zentriert */
 .speaker-name {
-  font-size: 24px;
-  font-weight: 600;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  width: 100%;
   margin-bottom: 20px;
   text-align: center;
+  overflow-wrap: anywhere;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
   line-height: 1.3;
-  width: 100%;
+  text-transform: uppercase;
 }
 
 .timer {
-  font-size: 72px;
-  font-weight: 300;
+  min-width: 220px;
+  margin-bottom: 20px;
   color: #fff;
   text-align: center;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 72px;
+  font-weight: 300;
   letter-spacing: 3px;
   line-height: 1;
-  font-family: 'Courier New', 'Consolas', monospace;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-  margin-bottom: 20px;
-  min-width: 220px;
+  text-shadow: 0 0 20px rgb(255 255 255 / 30%);
 }
 
 .timer.warning {
-  color: #faec04;
-  text-shadow: 0 0 20px rgba(250, 236, 4, 0.5);
+  color: var(--warning);
+  text-shadow: 0 0 20px rgb(250 236 4 / 50%);
 }
 
 .timer.overtime {
-  color: #bb3f17;
-  text-shadow: 0 0 20px rgba(187, 63, 23, 0.5);
+  color: var(--overtime);
+  text-shadow: 0 0 20px rgb(187 63 23 / 50%);
 }
 
-/* Getrennte Timer-Buttons */
 .btn-timer {
-  padding: 10px 35px;
-  background-color: transparent;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: inherit;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
+  display: block;
   width: 100%;
   max-width: 200px;
   margin: 0 auto;
-  display: block;
+  padding: 10px 35px;
+  background: transparent;
+  border-color: rgb(255 255 255 / 50%);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-.btn-timer:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-}
-
-.btn-timer:active {
-  transform: scale(0.98);
-}
-
+.btn-timer:hover,
 .btn-timer.running {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.8);
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 80%);
 }
 
 .test-controls {
   display: flex;
-  gap: 5px;
-  margin-top: 10px;
-  opacity: 0.6;
-  transition: opacity 0.3s;
   width: 100%;
+  gap: 5px;
   justify-content: center;
-}
-
-.test-controls:hover {
-  opacity: 1;
+  margin-top: 10px;
 }
 
 .btn-test {
   padding: 5px 10px;
-  font-size: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #aaa;
+  color: #ccc;
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 30%);
   border-radius: 4px;
-  cursor: pointer;
+  font-size: 11px;
 }
 
-.btn-test:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-}
-
-/* Info-Block mit Sichtbarkeits-Button (nur im Setup) */
 .info-block {
-  background-color: #000;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
+  margin-top: 20px;
   padding: 25px;
   text-align: center;
-  margin-top: 20px;
-  transition: all 0.3s ease;
+  background: #000;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 12px;
 }
 
-/* Info-Content (ohne Header im Timer-Screen) */
 .info-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 15px;
-}
-
-/* Dezentere Eye-Buttons (nur im Setup) */
-.btn-info-toggle {
-  padding: 6px 12px;
-  background-color: #222;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-
-.btn-info-toggle:hover {
-  background-color: #333;
-  border-color: #666;
-}
-
-/* Allgemeine .hidden-Klasse für alle Blöcke */
-.hidden {
-  display: none !important;
-}
-
-/* Logo-Upload Container - AUSSERHALB des editierbaren Bereichs */
-.logo-upload-section {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.logo-upload-label {
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  display: inline-block;
-}
-
-.logo-upload-label:hover {
-  background-color: #0056b3;
-}
-
-.logo-preview-container {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  min-height: 120px;
-  width: 100%;
-  margin-top: 15px;
-}
-
-.info-logo {
-  width: 150px;
-  height: auto;
-  object-fit: contain;
-}
-
-/* Logo-Entfernen-Button */
-.btn-logo-remove {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #dc3545;
-  color: #fff;
-  border: 1px solid #bd2130;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.btn-logo-remove:hover {
-  background-color: #bd2130;
-}
-
-/* Einfaches Textfeld statt contenteditable */
-.info-text-area {
-  width: 100%;
-  padding: 10px;
-  background-color: #222;
-  border: 1px solid #444;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 16px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 80px;
-}
-
-.info-text-area:focus {
-  outline: none;
-  border-color: #666;
 }
 
 .info-text {
-  font-size: 18px;
-  font-weight: 400;
   color: #fff;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  font-size: 18px;
   line-height: 1.6;
-  letter-spacing: 0.5px;
 }
 
-.info-text strong {
+.back-btn {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+  padding: 12px;
+  background: #333;
+  border-radius: 8px;
+  font-size: 16px;
   font-weight: 600;
 }
 
-/* ✅ Dezentere "Zurück zum Setup" Button */
-.back-btn {
-  margin-top: 20px;
-  width: 100%;
-  max-width: 600px;
-  padding: 10px;
-  background-color: #222;
-  color: #aaa;
-  border
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .setup-container {
+    padding: 20px;
+  }
+
+  .timer-grid,
+  .mode-options {
+    grid-template-columns: 1fr;
+  }
+
+  .timer {
+    min-width: 0;
+    font-size: 48px;
+  }
+
+  .speaker-name {
+    font-size: 20px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .header-logo {
+    width: 60px;
+  }
+}
