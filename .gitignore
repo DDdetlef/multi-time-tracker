@@ -22,3 +22,4 @@ node_modules/
 
 # Environment Variables
 .env
+assets/logo_infoblock.png
