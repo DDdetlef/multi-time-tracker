@@ -13,6 +13,7 @@ const timerLogo = document.getElementById('info-logo');
 const setupLogoPreview = document.getElementById('logo-preview-container');
 const timerLogoPreview = document.getElementById('timer-logo-container');
 const removeLogoButton = document.getElementById('setup-logo-remove-btn');
+const headerClock = document.getElementById('header-clock');
 
 infoToggleButton.addEventListener('click', toggleInfoBlock);
 logoInput.addEventListener('change', handleLogoUpload);
@@ -21,6 +22,22 @@ document.getElementById('back-to-setup').addEventListener('click', goBackToSetup
 
 restoreLogo();
 applyInfoBlockState();
+updateHeaderClock();
+window.setInterval(updateHeaderClock, 60_000);
+
+function updateHeaderClock() {
+  if (!headerClock) {
+    return;
+  }
+
+  const now = new Date();
+  headerClock.dateTime = now.toTimeString().slice(0, 5);
+  headerClock.textContent = now.toLocaleTimeString('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+}
 
 function toggleInfoBlock() {
   const currentlyHidden = getStoredValue(INFO_HIDDEN_KEY) === 'true';

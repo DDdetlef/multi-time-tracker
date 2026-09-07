@@ -16,6 +16,7 @@ The application runs locally in a modern browser and does not require a framewor
 - Optional event information text
 - Optional event logo
 - Automatic local storage of the information text, logo, and info-box visibility
+- Timer dashboard header with the Domane Dahlem logo, event title, subtitle, and live local time in 24-hour `HH:MM` format
 
 ### Live mode
 
@@ -82,7 +83,6 @@ multi-time-tracker/
 │   └── app.js
 └── assets/
     ├── logo_header_left.png
-    ├── logo_header_right.png
     └── logo_infoblock.png
 ```
 
@@ -90,7 +90,7 @@ multi-time-tracker/
 
 1. Download or clone the project.
 2. Keep the directory structure unchanged.
-3. Add the three standard logo files to the `assets` directory if they are not already included.
+3. Add the two standard logo files to the `assets` directory if they are not already included.
 4. Open `index.html` in a modern browser.
 
 No package installation is required.
@@ -150,7 +150,6 @@ The application expects these optional files:
 
 ```text
 assets/logo_header_left.png
-assets/logo_header_right.png
 assets/logo_infoblock.png
 ```
 
@@ -158,7 +157,7 @@ Recommended properties:
 
 - PNG with a transparent background
 - Clear design with good contrast
-- Header logos sized for compact display
+- Header logo sized for compact display
 - Info logo suitable for a width of approximately 150 pixels
 
 If no custom event logo is stored, `logo_infoblock.png` is used as the default. The application remains usable if a logo file is missing, but the corresponding standard logo will not be displayed correctly.
