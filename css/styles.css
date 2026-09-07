@@ -161,7 +161,7 @@ body {
   max-width: 1800px;
 }
 
-/* ✅ Header mit Logo links, Titel mittig */
+/* ✅ Header mit Logos links und rechts, Titel mittig */
 .header {
   display: flex;
   align-items: center;
@@ -171,13 +171,22 @@ body {
   background-color: #111;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.3);
+  gap: 20px; /* Abstand zwischen den Elementen */
+}
+
+.header-logo-left,
+.header-logo-right {
+  flex: 0 0 auto; /* Keine Skalierung, feste Größe */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header-logo {
-  width: 100px;
+  width: 80px;
   height: auto;
   object-fit: contain;
-  margin-right: 20px;
+  max-width: 100%;
 }
 
 .header-content {
@@ -388,11 +397,10 @@ body {
   .header {
     flex-direction: column;
     text-align: center;
+    gap: 10px;
   }
   .header-logo {
-    width: 80px;
-    margin-right: 0;
-    margin-bottom: 15px;
+    width: 60px;
   }
   .info-logo {
     width: 120px;
