@@ -4,7 +4,10 @@ Thumbs.db
 
 # directories
 /archiv/
-
+/assets/*.png
+/assets/*.jpg
+/assets/*.jpeg
+/assets/*.svg
 
 
 # Editor
