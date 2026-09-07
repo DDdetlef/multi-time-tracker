@@ -118,6 +118,10 @@ function syncLogoToTimer() {
 }
 
 function goBackToSetup() {
+  if (!window.confirm('Möchten Sie wirklich zum Setup zurückkehren?')) {
+    return;
+  }
+
   if (typeof stopAllTimers === 'function') {
     stopAllTimers();
   }

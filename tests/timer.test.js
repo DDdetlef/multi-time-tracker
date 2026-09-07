@@ -63,6 +63,40 @@ test('rounds display seconds consistently around zero', () => {
   assert.equal(call(context, 'getDisplaySeconds(-2000)'), -2);
 });
 
+test('shows resume after a timer has been paused', () => {
+  const { context, elements } = loadTimer();
+  const runningClasses = new Set();
+  const timerBlock = {
+    classList: {
+      toggle(className, enabled) {
+        runningClasses[enabled ? 'add' : 'delete'](className);
+      }
+    }
+  };
+  const button = {
+    classList: { toggle() {} },
+    closest: () => timerBlock,
+    disabled: false,
+    setAttribute() {},
+    textContent: 'Start'
+  };
+  const timerElement = {
+    className: '',
+    closest: () => ({ querySelector: () => button }),
+    textContent: ''
+  };
+  elements.set('timer1', timerElement);
+
+  call(context, "timers['1'] = { endTime: null, hasStarted: false, initialMs: 900000, interval: null, lastDisplayState: null, lastDisplayText: null, remainingMs: 900000, running: false }");
+  call(context, "toggleTimer('1')");
+  assert.equal(button.textContent, 'Stop');
+  assert.equal(runningClasses.has('running'), true);
+
+  call(context, "toggleTimer('1')");
+  assert.equal(button.textContent, 'Fortsetzen');
+  assert.equal(runningClasses.has('running'), false);
+});
+
 test('renders boundary values with matching state classes', () => {
   const { context, elements } = loadTimer();
   const timerElement = { className: '', textContent: '' };

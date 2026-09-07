@@ -27,6 +27,7 @@ function initTimers() {
       remainingMs: initialMs,
       endTime: null,
       running: false,
+      hasStarted: false,
       lastDisplayText: null,
       lastDisplayState: null
     };
@@ -64,6 +65,10 @@ function stopAllTimers() {
   updateStopAllButton();
 }
 
+function resetAllTimers() {
+  Object.keys(timers).forEach((id) => resetTimer(id));
+}
+
 function updateTimerDisplay(id, force = false) {
   const timer = timers[id];
   const timerElement = document.getElementById(`timer${id}`);
@@ -80,6 +85,7 @@ function updateTimerDisplay(id, force = false) {
     console.error(`Timer ${id} has an invalid remaining time and was stopped.`);
     stopTimerSafely(timer);
     timer.remainingMs = Number.isFinite(timer.initialMs) ? timer.initialMs : 0;
+    timer.hasStarted = false;
     updateTimerButton(id, false);
     updateStopAllButton();
     updateTimerDisplay(id, true);
@@ -182,6 +188,7 @@ function startTimer(id, timer) {
 
   timer.endTime = performance.now() + timer.remainingMs;
   timer.running = true;
+  timer.hasStarted = true;
   updateTimerButton(id, true);
 
   timer.interval = setInterval(() => {
@@ -250,6 +257,7 @@ function resetTimer(id) {
 
   stopTimerSafely(timer);
   timer.remainingMs = timer.initialMs;
+  timer.hasStarted = false;
   updateTimerButton(id, false);
   updateTimerDisplay(id, true);
   updateStopAllButton();
@@ -262,13 +270,15 @@ function updateTimerButton(id, running) {
     return;
   }
 
-  const label = running ? 'Stop' : 'Start';
+  const timer = timers[id];
+  const label = running ? 'Stop' : (timer?.hasStarted ? 'Fortsetzen' : 'Start');
   if (button.textContent !== label) {
     button.textContent = label;
   }
 
   button.classList.toggle('running', running);
   button.setAttribute('aria-pressed', String(running));
+  button.closest?.('.timer-block')?.classList.toggle('running', running);
 }
 
 function getTimerButton(id) {
@@ -299,7 +309,17 @@ function refreshRunningTimers() {
   updateStopAllButton();
 }
 
-document.getElementById('stop-all-timers')?.addEventListener('click', stopAllTimers);
+document.getElementById('stop-all-timers')?.addEventListener('click', () => {
+  if (window.confirm('Möchten Sie wirklich alle Timer stoppen?')) {
+    stopAllTimers();
+  }
+});
+
+document.getElementById('reset-all-timers')?.addEventListener('click', () => {
+  if (window.confirm('Möchten Sie wirklich alle Timer zurücksetzen?')) {
+    resetAllTimers();
+  }
+});
 
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
